@@ -170,8 +170,7 @@ def nakshatra(jd, place):
   """Current nakshatra as of julian day (jd)
      1 = Asvini, 2 = Bharani, ..., 27 = Revati
   """
-  swe.set_sid_mode(swe.SIDM_LAHIRI)   # Force Lahiri
-
+  swe.set_sid_mode(swe.SIDM_LAHIRI)
   # 1. Find time of sunrise
   lat, lon, tz = place
   rise = sunrise(jd, place)[0] - tz / 24.  # Sunrise at UT 00:00
@@ -195,10 +194,6 @@ def nakshatra(jd, place):
   nak_tmrw = ceil(longitudes[-1] * 27 / 360)
   isSkipped = (nak_tmrw - nak) % 27 > 1
   if isSkipped:
-    # search for it after 'approx_end' time has passed
-    # offsets = [approx_end + o for o in offsets]
-    # longitudes = [(lunar_longitude(rise + t) - swe.get_ayanamsa_ut(rise)) % 360 for t in offsets]
-    # longitudes = unwrap_angles(longitudes)
     leap_nak = nak + 1
     approx_end = inverse_lagrange(offsets, longitudes, leap_nak * 360 / 27)
     ends = (rise - jd + approx_end) * 24 + tz
@@ -211,13 +206,10 @@ def yoga(jd, place):
   """Yoga at given jd and place.
      1 = Vishkambha, 2 = Priti, ..., 27 = Vaidhrti
   """
-  swe.set_sid_mode(swe.SIDM_LAHIRI)   # Force Lahiri
+  swe.set_sid_mode(swe.SIDM_LAHIRI)
   # 1. Find time of sunrise
   lat, lon, tz = place
-  result = swe.rise_trans(jd, swe.SUN, lon, lat, rsmi=swe.BIT_DISC_CENTER + swe.CALC_RISE)
-  rise = result[1][0]  # julian-day number
-  next_jd = ceil(rise)
-  frac_day_left = next_jd - rise
+  rise = sunrise(jd, place)[0] - tz / 24.  # Sunrise at UT 00:00
 
   # 2. Find the Nirayana longitudes and add them
   lunar_long = (lunar_longitude(rise) - swe.get_ayanamsa_ut(rise)) % 360
@@ -227,7 +219,7 @@ def yoga(jd, place):
   yog = ceil(total * 27 / 360)
 
   # 3. Find how many longitudes is there left to be swept
-  degrees_left = (360 / 27) - total % (360 / 27)
+  degrees_left = yog * (360 / 27) - total
 
   # 3. Compute longitudinal sums at intervals of 0.25 days from sunrise
   offsets = [0.25, 0.5, 0.75, 1.0]
@@ -240,9 +232,24 @@ def yoga(jd, place):
   x = offsets
   # compute fraction of day (after sunrise) needed to traverse 'degrees_left'
   approx_end = inverse_lagrange(x, y, degrees_left)
-  ends = (rise + approx_end -jd) * 24 + tz
+  ends = (rise + approx_end - jd) * 24 + tz
+  answer = [int(yog), to_dms(ends)]
 
-  return [int(yog), to_dms(ends)]
+  # 5. Check for skipped yoga
+  lunar_long_tmrw = (lunar_longitude(rise + 1) - swe.get_ayanamsa_ut(rise + 1)) % 360
+  solar_long_tmrw = (solar_longitude(rise + 1) - swe.get_ayanamsa_ut(rise + 1)) % 360
+  total_tmrw = (lunar_long_tmrw + solar_long_tmrw) % 360
+  tomorrow = ceil(total_tmrw * 27 / 360)
+  isSkipped = (tomorrow - yog) % 27 > 1
+  if isSkipped:
+    # interpolate again with same (x,y)
+    leap_yog = yog + 1
+    degrees_left = leap_yog * (360 / 27) - total
+    approx_end = inverse_lagrange(x, y, degrees_left)
+    ends = (rise + approx_end - jd) * 24 + tz
+    answer += [int(leap_yog), to_dms(ends)]
+
+  return answer
 
 
 def karana(jd, place):
@@ -263,6 +270,37 @@ def vaara(jd):
   """Weekday for given Julian day. 0 = Sunday, 1 = Monday,..., 6 = Saturday"""
   return 1 + int(ceil(jd) % 7)
 
+def masa(jd):
+  swe.set_sid_mode(swe.SIDM_LAHIRI)
+  s = (solar_longitude(jd) - swe.get_ayanamsa_ut(jd)) % 360
+  c = (lunar_longitude(jd) - swe.get_ayanamsa_ut(jd)) % 360
+  masa_num = int((s/30) % 12)
+  if int((c/30) % 12) == masa_num:
+    masa_num += 1
+
+  return masa_num
+
+def lunar_phase(jd):
+  solar_long = solar_longitude(jd)
+  lunar_long = lunar_longitude(jd)
+  moon_phase = (lunar_long - solar_long) % 360
+  return moon_phase
+
+def new_moon(jd):
+  step = 1
+  eps = 1E-2
+  a = lunar_phase(jd)
+  while abs(a - 180) > eps:
+    b = lunar_phase(jd + step)
+    if b > 180:
+      step *= 2
+    else:
+      step /= 2
+    a = lunar_phase(jd)
+
+  return a
+  
+
 def raasi(jd):
   """Zodiac of given jd. 1 = Mesha, ... 12 = Meena"""
   swe.set_sid_mode(swe.SIDM_LAHIRI)
@@ -278,8 +316,6 @@ def all_tests():
   print(moonset(date2, bangalore))  # Expected: 24:12:48
   print(sunrise(date2, bangalore)[1])  # Expected:  6:47:20
   print(sunset(date2, bangalore))   # Expected: 18:12:58 
-  print(yoga(date3, bangalore))  # Expected: Vishkambha (1), ends at 22:59:38
-  print(yoga(date2, bangalore))  # Expected: Siddha (21), ends at 29:10:40
   assert(vaara(date2) == 5)
   print(sunrise(date4, shillong)[1])   # On this day, Nakshatra and Yoga are skipped!
   print(karana(date2, helsinki))   # Expected: 14, Vanija
@@ -288,13 +324,18 @@ def all_tests():
 def tithi_tests():
   feb3 = gregorian_to_jd(Date(2013, 2, 3))
   apr24 = gregorian_to_jd(Date(2010, 4, 24))
+  apr19 = gregorian_to_jd(Date(2013, 4, 19))
+  apr20 = gregorian_to_jd(Date(2013, 4, 20))
+  apr21 = gregorian_to_jd(Date(2013, 4, 21))
   print(tithi(date1, bangalore))  # Expected: krishna ashtami (23), ends at 27:07:09
   print(tithi(date2, bangalore))  # Expected: Saptami, ends at 16:24:04
   print(tithi(date3, bangalore))  # Expected: Krishna Saptami, ends at 25:03:22
   print(tithi(date2, helsinki))   # Expected: Shukla saptami until 12:54:04
   print(tithi(apr24, bangalore))  # Expected: [10, [6,9,18], 11, [27, 33, 50]]
   print(tithi(feb3, bangalore))   # Expected: [22, [8,13,52], 23, [30, 33, 6]]
-  
+  print(tithi(apr19, helsinki))   # Expected: [9, [28, 44, 60]]
+  print(tithi(apr20, helsinki))   # Expected: [10, - ahoratra -]
+  print(tithi(apr21, helsinki))   # Expected: [10, [5, 22, 6]]
   return
 
 def nakshatra_tests():
@@ -303,6 +344,16 @@ def nakshatra_tests():
   print(nakshatra(date3, bangalore))  # Expecred: 24 (Shatabhisha) ends at 26:32:36
   print(nakshatra(date4, shillong))   # Expected: [3, [5,0,59]] then [4,[26,31,00]]
   return
+
+def yoga_tests():
+  may22 = gregorian_to_jd(Date(2013, 5, 22))
+  print(yoga(date3, bangalore))  # Expected: Vishkambha (1), ends at 22:59:38
+  print(yoga(date2, bangalore))  # Expected: Siddha (21), ends at 29:10:40
+  print(yoga(may22, helsinki))   # [16, [6,20,25], 17, [27,21,53]]
+
+def masa_tests():
+  print(masa(date2))    # Expected 10
+  print(raasi(date2))   # Expected 10
 
 if __name__ == "__main__":
   bangalore = Place(12.972, 77.594, +5.5)
@@ -314,7 +365,11 @@ if __name__ == "__main__":
   date4 = gregorian_to_jd(Date(2009, 6, 21))
   apr_8 = gregorian_to_jd(Date(2010, 4, 8))
   apr_10 = gregorian_to_jd(Date(2010, 4, 10))
-  all_tests()
-  nakshatra_tests()
-  tithi_tests()
+  # all_tests()
+  # tithi_tests()
+  # nakshatra_tests()
+  # yoga_tests()
+  # masa_tests()
+  jd = gregorian_to_jd(Date(2013, 1, 13))
+  # new_moon(jd)
 
