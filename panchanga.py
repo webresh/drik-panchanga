@@ -280,6 +280,7 @@ def masa(jd, place):
   return [int(maasa), is_leap_month]
 
 # epoch-midnight to given midnight
+# Days elapsed since beginning of Kali Yuga
 ahargana = lambda jd: jd - 588465.5
 
 def elapsed_year(jd):
@@ -287,15 +288,10 @@ def elapsed_year(jd):
   ahar = ahargana(jd)
   mean_sidereal_year = 365.25636
   solar_long = (solar_longitude(jd) - swe.get_ayanamsa_ut(jd)) % 360
-  return round(ahar / mean_sidereal_year -  solar_long / 360)
-
-def elapsed_year_old(jd):
-  ahar = ahargana(jd)
-  yuga_rotation_star = 1582237828  # 28 = bija correction 
-  yuga_rotation_sun = 4320000
-  yuga_civil_days = yuga_rotation_star - yuga_rotation_sun
-  kali_year = (ahar * yuga_rotation_sun / yuga_civil_days)
-  return kali_year
+  kali = round(ahar / mean_sidereal_year -  solar_long / 360)
+  saka = kali - 3179
+  vikrama = saka + 135
+  return kali, saka
 
 # New moon day: sun and moon have same longitude (0 degrees = 360 degrees difference)
 # Full moon day: sun and moon are 180 deg apart
