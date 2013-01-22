@@ -19,6 +19,8 @@ output is the uncertainity in your input values (latitude, longitude).
 
 Also includes computation of sunrise, sunset, moonrise and moonset.
 
+By default, the month type is Amavasyanta (new moon to new moon) which
+is most prominent type of calendar used in South India.
 
 Requirements
 ------------

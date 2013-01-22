@@ -129,9 +129,7 @@ def tithi(jd, place):
   rise = sunrise(jd, place)[0] - tz / 24
   
   # 2. Find tithi at this JDN
-  solar_long = solar_longitude(rise)
-  lunar_long = lunar_longitude(rise)
-  moon_phase = (lunar_long - solar_long) % 360
+  moon_phase = lunar_phase(rise)
   today = ceil(moon_phase / 12)
   degrees_left = today * 12 - moon_phase
    
@@ -150,9 +148,7 @@ def tithi(jd, place):
   answer = [int(today), to_dms(ends)]
 
   # 5. Check for skipped tithi
-  solar_long_tmrw = solar_longitude(rise + 1)
-  lunar_long_tmrw = lunar_longitude(rise + 1)
-  moon_phase_tmrw = (lunar_long_tmrw - solar_long_tmrw) % 360
+  moon_phase_tmrw = lunar_phase(rise + 1)
   tomorrow = ceil(moon_phase_tmrw / 12)
   isSkipped = (tomorrow - today) % 30 > 1
   if isSkipped:
@@ -270,44 +266,66 @@ def vaara(jd):
   """Weekday for given Julian day. 0 = Sunday, 1 = Monday,..., 6 = Saturday"""
   return 1 + int(ceil(jd) % 7)
 
-def masa(jd):
+def masa(jd, place):
+  """Returns lunar month and if it is adhika or not.
+     1 = Chaitra, 2 = Vaisakha, ..., 12 = Phalguna"""
+  ti = tithi(jd, place)[0]
+  critical = sunrise(jd, place)[0]  # - tz/24 ?
+  last_new_moon = new_moon(critical, ti, -1)
+  next_new_moon = new_moon(critical, ti, +1)
+  this_solar_month = raasi(last_new_moon)
+  next_solar_month = raasi(next_new_moon)
+  is_leap_month = (this_solar_month == next_solar_month)
+  maasa = (this_solar_month + 1) % 12
+  return [int(maasa), is_leap_month]
+
+# epoch-midnight to given midnight
+ahargana = lambda jd: jd - 588465.5
+
+def elapsed_year(jd):
   swe.set_sid_mode(swe.SIDM_LAHIRI)
-  s = (solar_longitude(jd) - swe.get_ayanamsa_ut(jd)) % 360
-  c = (lunar_longitude(jd) - swe.get_ayanamsa_ut(jd)) % 360
-  masa_num = int((s/30) % 12)
-  if int((c/30) % 12) == masa_num:
-    masa_num += 1
+  ahar = ahargana(jd)
+  mean_sidereal_year = 365.25636
+  solar_long = (solar_longitude(jd) - swe.get_ayanamsa_ut(jd)) % 360
+  return round(ahar / mean_sidereal_year -  solar_long / 360)
 
-  return masa_num
+def elapsed_year_old(jd):
+  ahar = ahargana(jd)
+  yuga_rotation_star = 1582237828  # 28 = bija correction 
+  yuga_rotation_sun = 4320000
+  yuga_civil_days = yuga_rotation_star - yuga_rotation_sun
+  kali_year = (ahar * yuga_rotation_sun / yuga_civil_days)
+  return kali_year
 
-def lunar_phase(jd):
-  solar_long = solar_longitude(jd)
-  lunar_long = lunar_longitude(jd)
-  moon_phase = (lunar_long - solar_long) % 360
-  return moon_phase
-
-def new_moon(jd):
-  step = 1
-  eps = 1E-2
-  a = lunar_phase(jd)
-  while abs(a - 180) > eps:
-    b = lunar_phase(jd + step)
-    if b > 180:
-      step *= 2
-    else:
-      step /= 2
-    a = lunar_phase(jd)
-
-  return a
+# New moon day: sun and moon have same longitude (0 degrees = 360 degrees difference)
+# Full moon day: sun and moon are 180 deg apart
+def new_moon(jd, tithi_, opt = -1):
+  """Returns JDN, where
+     opt = -1:  JDN < jd such that lunar_phase(JDN) = 360 degrees
+     opt = +1:  JDN >= jd such that lunar_phase(JDN) = 360 degrees
+  """
+  if opt == -1:  start = jd - tithi_         # previous new moon
+  if opt == +1:  start = jd + (30 - tithi_)  # next new moon
+  # Search within a span of (start +- 2) days
+  x = [ -2 + offset/4 for offset in range(17) ]
+  y = [lunar_phase(start + i) for i in x]
+  y = unwrap_angles(y)
+  y0 = inverse_lagrange(x, y, 360)
+  return start + y0
   
-
 def raasi(jd):
   """Zodiac of given jd. 1 = Mesha, ... 12 = Meena"""
   swe.set_sid_mode(swe.SIDM_LAHIRI)
   s = solar_longitude(jd)
   solar_nirayana = (solar_longitude(jd) - swe.get_ayanamsa_ut(jd)) % 360
   # 12 rasis occupy 360 degrees, so each one is 30 degrees
-  return 1 + int(floor(solar_nirayana / 30.))
+  return ceil(solar_nirayana / 30.)
+
+def lunar_phase(jd):
+  solar_long = solar_longitude(jd)
+  lunar_long = lunar_longitude(jd)
+  moon_phase = (lunar_long - solar_long) % 360
+  return moon_phase
 
 
 # ----- TESTS ------
@@ -352,8 +370,18 @@ def yoga_tests():
   print(yoga(may22, helsinki))   # [16, [6,20,25], 17, [27,21,53]]
 
 def masa_tests():
-  print(masa(date2))    # Expected 10
-  print(raasi(date2))   # Expected 10
+  jd = gregorian_to_jd(Date(2013, 2, 10))
+  aug17 = gregorian_to_jd(Date(2012, 8, 17))
+  aug18 = gregorian_to_jd(Date(2012, 8, 18))
+  sep19 = gregorian_to_jd(Date(2012, 9, 18))
+  may20 = gregorian_to_jd(Date(2012, 5, 20))
+  may21 = gregorian_to_jd(Date(2012, 5, 21))
+  print(masa(jd, bangalore))     # Pusya (10)
+  print(masa(aug17, bangalore))  # Shravana (5) amavasya
+  print(masa(aug18, bangalore))  # Adhika Bhadrapada [6, True]
+  print(masa(sep19, bangalore))  # Normal Bhadrapada [6, False]
+  print(masa(may20, helsinki))   # Vaisakha [2]
+  print(masa(may21, helsinki))   # Jyestha [3]
 
 if __name__ == "__main__":
   bangalore = Place(12.972, 77.594, +5.5)
@@ -369,7 +397,6 @@ if __name__ == "__main__":
   # tithi_tests()
   # nakshatra_tests()
   # yoga_tests()
-  # masa_tests()
-  jd = gregorian_to_jd(Date(2013, 1, 13))
+  masa_tests()
   # new_moon(jd)
 
