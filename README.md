@@ -21,7 +21,14 @@ output is the uncertainity in your input values (latitude, longitude).
 Also includes computation of sunrise, sunset, moonrise and moonset.
 
 By default, the month type is Amavasyanta (new moon to new moon) which
-is most prominent type of calendar used in South India.
+is most prominent type of calendar used in South India. 
+
+NOTE:
+All timings are end timings. Timings displayed higher than 24:00 denote
+hours past midnight because the Hindu day (tithi) starts and ends with 
+sunrise. If applicable, daylight savings (DST) are accounted for 
+automatically based on the date and place entered in the textboxes.
+
 
 Requirements
 ------------
@@ -52,13 +59,76 @@ How does it look?
 ![Sample screenshot](http://s9.postimage.org/sag602wvz/screenshot.jpg "Hindu Panchanga")
 
 
+About the calendar
+------------------
+
+There are two schools of Indian calendar makers: 
+
+1. Those who follow the rules of the [_Sūrya Siddhāntā_](http://en.wikipedia.org/wiki/Surya_Siddhanta)
+   (SS, Theory of the Sun) or its variants like _Ārya Siddhānta_ of Aryabhata.
+2. Those who follow the _Dṛk Siddhāntā_ (Empirical Theory).
+
+SS contains semi-analytical equations for specifying the positions of sun and moon.
+However, the constants in these equations have to be updated regularly (_bīja saṃskāra_). 
+But the equations in SS were last updated around 1000 CE, so they no longer match the
+planetary positions as we see today. For example, the date of solar eclipse as predicted
+by the equations of SS are off by many hours from its actual occurence. In spite of this,
+most Hindu maṭhas still publish yearly pañcāṅgas according to the rules of SS, in the name
+of preserving and practising tradition (_paramparā_).
+
+The latter one, _Drik_ school, still follow the general concepts from SS,
+but get the planetary positions from measured or observed data (dṛś = to see).
+Hence, their results match accurately with observed celestial phenomena. 
+The [Swiss Ephemeris](http://www.astro.com/swisseph/swephinfo_e.htm) is probably
+the best source available today for planetary calculations. It provides highly
+accurate databases of planetary data for about 10000 years. Hence, this panchanga
+is based on the Swiss Ephemeris. Other databases include those published by NASA's
+JPL (DE405) or the Moshier ephemeris.
+
+
+References
+----------
+
+These ones are helpful for implementing panchanga software:
+* Karanam Ramakumar, [_Panchangam Calculations_](http://archive.org/details/PanchangamCalculations)
+* _Second Level of the Astronomical Calculations in GCAL_, used in ISKCON's GCal software.
+
+This is _the_ calendar book (though it mostly deals with Surya Siddhanta):
+* Dershowitz and Reingold, _Calendrical Calculations_, 3rd edition, 2008.
+
+#### Similar software ####
+
+Prof. M. Yanom's [online interface](http://www.cc.kyoto-su.ac.jp/~yanom/pancanga/)
+to his [Perl code](http://www.cc.kyoto-su.ac.jp/~yanom/sanskrit/pancanga/pancanga3.13) -- this
+is the best version of the old Surya Siddhanta pancanga I've seen.
+
+[drikpanchang](http://drikpanchang.com) is a reliable online calendar for the Drik.
+However, it is neither open source nor do they have a desktop program.
+
+[Hindu Calendar](https://play.google.com/store/apps/details?id=com.alokmandavgane.hinducalendar)
+for Android is another offline Drik calendar by Alok Mandavgane. Again, this is
+not open source.
+
+Among open source programs, I found these two:
+
+* [On Google Code](http://panchangam.googlecode.com/svn/calc-v2): generates a pdf of
+panchanga for any year and place, but imprecise. For ex., tithi end timings are off 
+by ten minutes sometimes. There is no GUI either.
+
+* [On GitHub](https://github.com/santhoshn/panchanga): Based on Paul Schlyter's
+semi-analytical model for [planetary positions](http://stjarnhimlen.se/comp/ppcomp.html).
+This program gives the panchanga for a given _instant_ but doesn't ask for a place's
+coordinates or timezone. This is probably because the program doesn't compute sunrise
+timings at all! The planetary model fails for dates outside the range 1800 CE to 2100 CE.
+
+
 License
 -------
 
-GNU Affero GPL version 3.
+GNU Affero GPL version 3 (or later).
 
 
 #### TODO ####
 
 * Festivals
-* Rahukala, Yamaganda
+* Rahukaala, Yamaganda kaala
