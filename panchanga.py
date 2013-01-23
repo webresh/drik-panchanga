@@ -323,6 +323,17 @@ def lunar_phase(jd):
   moon_phase = (lunar_long - solar_long) % 360
   return moon_phase
 
+def samvatsara(jd):
+  ahar = ahargana(jd)
+  jupiter_period = 1577917500 / 364224  # number of days for revolution around sun
+  # Change 13 to 27 (14 yrs offset) for North Indian tradition
+  # See the function "get_Jovian_Year_name_south" in pancanga.pl
+  samvat = (int(ahar / (jupiter_period / 12)) + 13) % 60
+  return samvat
+
+def ritu(masa_num):
+  """0 = Vasanta,...,5 = Shishira"""
+  return masa_num // 2
 
 # ----- TESTS ------
 def all_tests():
