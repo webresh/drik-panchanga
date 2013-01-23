@@ -47,9 +47,9 @@ If you want to _modify_ the GUI (`Gui.wxg`), you must use wxGlade:
 
 How does it look?
 
-[Sample screenshot](http://s9.postimage.org/yau3s2b5n/screenshot.jpg):
+[Sample screenshot](http://s9.postimage.org/sag602wvz/screenshot.jpg):
 
-![Sample screenshot](http://s9.postimage.org/yau3s2b5n/screenshot.jpg "Hindu Panchanga")
+![Sample screenshot](http://s9.postimage.org/sag602wvz/screenshot.jpg "Hindu Panchanga")
 
 
 License
