@@ -48,7 +48,9 @@ class Panchanga(wx.Frame):
         self.latTxt = wx.TextCtrl(self, -1, "12.97194", style=wx.TE_PROCESS_TAB)
         self.lonTxt = wx.TextCtrl(self, -1, "77.59369", style=wx.TE_PROCESS_TAB)
         self.tzTxt = wx.TextCtrl(self, -1, "+5.5")
-        self.masaTxt = wx.StaticText(self, -1, u"Puṣya  ")
+        self.samvatTxt = wx.StaticText(self, -1, "Nandana samvatsara")
+        self.masaTxt = wx.StaticText(self, -1, u"Puṣya  māsa")
+        self.rituTxt = wx.StaticText(self, -1, u"Hemanta ṛtu")
         self.tithiTxt = wx.StaticText(self, -1, u"Śukla pakṣa dvādaṣī   ")
         self.tithiTimeTxt = wx.StaticText(self, -1, "28:43:28")
         self.nakTxt = wx.StaticText(self, -1, u"Rohiṇī")
@@ -58,11 +60,12 @@ class Panchanga(wx.Frame):
         self.karanaTxt = wx.StaticText(self, -1, "Bhava")
         self.karanaTimeTxt = wx.StaticText(self, -1, "15:27:47")
         self.varaTxt = wx.StaticText(self, -1, u"Budhavāra  ")
-        self.sakaTxt = wx.StaticText(self, -1, u"Śaka 1934 ")
-        self.kaliTxt = wx.StaticText(self, -1, "Kali 5113")
-        self.aharTxt = wx.StaticText(self, -1, "1867850")
+        self.aharTxt = wx.StaticText(self, -1, "KaliDay 1867850")
+        self.sakaTxt = wx.StaticText(self, -1, u"Śālivāhana śaka 1934 ")
+        self.kaliTxt = wx.StaticText(self, -1, "GataKali 5113")
         self.sunriseTxt = wx.StaticText(self, -1, "06:47:38")
         self.sunsetTxt = wx.StaticText(self, -1, "18:15:31")
+        self.duraTxt = wx.StaticText(self, -1, "11:27:52")
         self.sizer_1_staticbox = wx.StaticBox(self, -1, "")
 
         self.__set_properties()
@@ -84,7 +87,7 @@ class Panchanga(wx.Frame):
     def __set_properties(self):
         # begin wxGlade: Panchanga.__set_properties
         self.SetTitle("Indian Calendar")
-        self.SetSize((550, 488))
+        self.SetSize((560, 488))
         self.SetToolTipString("Can also be entered as: 77d 35' 37\"")
         self.dateTxt.SetToolTipString("Enter date and click \"Compute\". Negative years are treated as per proleptic Gregorian calendar.")
         self.dateTxt.SetFocus()
@@ -98,13 +101,13 @@ class Panchanga(wx.Frame):
         # begin wxGlade: Panchanga.__do_layout
         self.sizer_1_staticbox.Lower()
         sizer_1 = wx.StaticBoxSizer(self.sizer_1_staticbox, wx.HORIZONTAL)
-        grid_sizer_1 = wx.GridSizer(17, 3, 0, 0)
+        grid_sizer_1 = wx.GridSizer(16, 3, 0, 0)
         label_1 = wx.StaticText(self, -1, "")
         grid_sizer_1.Add(label_1, 0, 0, 0)
         label_2 = wx.StaticText(self, -1, u"Dṛg-gaṇita Pañcāṅga", style=wx.ALIGN_RIGHT | wx.ALIGN_CENTRE)
         label_2.SetMinSize((319, 24))
         label_2.SetFont(wx.Font(15, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
-        grid_sizer_1.Add(label_2, 0, wx.BOTTOM | wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
+        grid_sizer_1.Add(label_2, 0, wx.ALIGN_CENTER_VERTICAL, 0)
         label_4 = wx.StaticText(self, -1, "")
         grid_sizer_1.Add(label_4, 0, 0, 0)
         label_3 = wx.StaticText(self, -1, "Date (DD/MM/YYYY)")
@@ -130,11 +133,9 @@ class Panchanga(wx.Frame):
         grid_sizer_1.Add(static_line_2, 0, wx.EXPAND, 0)
         static_line_3 = wx.StaticLine(self, -1)
         grid_sizer_1.Add(static_line_3, 0, wx.EXPAND, 0)
-        label_8 = wx.StaticText(self, -1, u"Māsa ")
-        grid_sizer_1.Add(label_8, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
-        grid_sizer_1.Add(self.masaTxt, 0, wx.ALIGN_CENTER_VERTICAL, 0)
-        label_9 = wx.StaticText(self, -1, "")
-        grid_sizer_1.Add(label_9, 0, 0, 0)
+        grid_sizer_1.Add(self.samvatTxt, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
+        grid_sizer_1.Add(self.masaTxt, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
+        grid_sizer_1.Add(self.rituTxt, 0, wx.ALIGN_CENTER_VERTICAL, 0)
         label_7 = wx.StaticText(self, -1, "Tithi")
         grid_sizer_1.Add(label_7, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
         grid_sizer_1.Add(self.tithiTxt, 0, wx.ALIGN_CENTER_VERTICAL, 0)
@@ -156,15 +157,9 @@ class Panchanga(wx.Frame):
         grid_sizer_1.Add(self.varaTxt, 0, wx.ALIGN_CENTER_VERTICAL, 0)
         label_24 = wx.StaticText(self, -1, "")
         grid_sizer_1.Add(label_24, 0, 0, 0)
-        label_25 = wx.StaticText(self, -1, "Elapsed Year")
-        grid_sizer_1.Add(label_25, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
+        grid_sizer_1.Add(self.aharTxt, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
         grid_sizer_1.Add(self.sakaTxt, 0, wx.ALIGN_CENTER_VERTICAL, 0)
         grid_sizer_1.Add(self.kaliTxt, 0, wx.ALIGN_CENTER_VERTICAL, 0)
-        label_28 = wx.StaticText(self, -1, "Kali Day")
-        grid_sizer_1.Add(label_28, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
-        grid_sizer_1.Add(self.aharTxt, 0, wx.ALIGN_CENTER_VERTICAL, 0)
-        label_30 = wx.StaticText(self, -1, "")
-        grid_sizer_1.Add(label_30, 0, 0, 0)
         static_line_4 = wx.StaticLine(self, -1)
         grid_sizer_1.Add(static_line_4, 0, wx.EXPAND, 0)
         static_line_5 = wx.StaticLine(self, -1)
@@ -173,14 +168,17 @@ class Panchanga(wx.Frame):
         grid_sizer_1.Add(static_line_6, 0, wx.EXPAND, 0)
         label_34 = wx.StaticText(self, -1, "Sunrise")
         grid_sizer_1.Add(label_34, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
-        label_36 = wx.StaticText(self, -1, "")
-        grid_sizer_1.Add(label_36, 0, 0, 0)
-        grid_sizer_1.Add(self.sunriseTxt, 0, wx.ALIGN_CENTER_VERTICAL, 0)
         label_37 = wx.StaticText(self, -1, "Sunset")
         grid_sizer_1.Add(label_37, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
-        label_38 = wx.StaticText(self, -1, "")
-        grid_sizer_1.Add(label_38, 0, 0, 0)
-        grid_sizer_1.Add(self.sunsetTxt, 0, wx.ALIGN_CENTER_VERTICAL, 0)
+        label_5 = wx.StaticText(self, -1, "Day duration")
+        grid_sizer_1.Add(label_5, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
+        grid_sizer_1.Add(self.sunriseTxt, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
+        grid_sizer_1.Add(self.sunsetTxt, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
+        grid_sizer_1.Add(self.duraTxt, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
+        label_10 = wx.StaticText(self, -1, "")
+        grid_sizer_1.Add(label_10, 0, 0, 0)
+        label_9 = wx.StaticText(self, -1, "https://github.com/bdsatish/drik-panchanga")
+        grid_sizer_1.Add(label_9, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
         sizer_1.Add(grid_sizer_1, 1, 0, 0)
         self.SetSizer(sizer_1)
         self.Layout()
@@ -195,13 +193,16 @@ class Panchanga(wx.Frame):
         nak = nakshatra(jd, place)
         yog = yoga(jd, place)
         mas = masa(jd, place)
+        rtu = ritu(mas[0])
 
         kar = karana(jd, place)
         vara = vaara(jd)
         srise = sunrise(jd, place)[1]
-        sset = sunset(jd, place)
+        sset = sunset(jd, place)[1]
         kday = ahargana(jd)
         kyear, sakayr = elapsed_year(jd)
+        samvat = samvatsara(jd)
+        day_dur = day_duration(jd, place)[1]
 
         # Update GUI one by one. First the easy ones
         self.karanaTxt.SetLabel("%s" % self.karanas[str(kar[0])])
@@ -209,14 +210,18 @@ class Panchanga(wx.Frame):
         self.varaTxt.SetLabel("%s" % self.vaaras[str(vara)])
         self.sunriseTxt.SetLabel(format_time(srise))
         self.sunsetTxt.SetLabel(format_time(sset))
-        self.sakaTxt.SetLabel(u"Śaka %d" % (sakayr))
-        self.kaliTxt.SetLabel("Kali %d" % (kyear))
+        self.sakaTxt.SetLabel(u"Śālivāhana śaka %d" % (sakayr))
+        self.kaliTxt.SetLabel("GataKali %d" % (kyear))
+        self.aharTxt.SetLabel("KaliDay %d" % (kday))
+        self.rituTxt.SetLabel(u"%s ṛtu" % (self.ritus[str(rtu)]))
+        self.samvatTxt.SetLabel("%s samvatsara" % (self.samvats[str(samvat)]))
+        self.duraTxt.SetLabel(format_time(day_dur))
 
         # Next update the complex ones
         month_name = self.masas[str(mas[0])]
         is_leap = mas[1]
         if is_leap:  month_name = "Adhika " + month_name.lower()
-        self.masaTxt.SetLabel(month_name)
+        self.masaTxt.SetLabel(month_name + u" māsa")
 
         name, hms = format_name_hms(yog, self.yogas)
         self.yogaTxt.SetLabel(name)
@@ -284,6 +289,7 @@ class Panchanga(wx.Frame):
         self.karanas = sktnames["karanas"]
         self.masas = sktnames["masas"]
         self.samvats = sktnames["samvats"]
+        self.ritus = sktnames["ritus"]
 
 
     def update_place(self, event):  # wxGlade: Panchanga.<event_handler>

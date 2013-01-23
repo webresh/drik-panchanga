@@ -103,7 +103,7 @@ def sunset(jd, place):
   result = swe.rise_trans(jd - tz/24, swe.SUN, lon, lat, rsmi=swe.BIT_DISC_CENTER + swe.CALC_SET)
   setting = result[1][0]  # julian-day number
   # Convert to local time
-  return to_dms((setting - jd) * 24 + tz)
+  return [setting + tz/24., to_dms((setting - jd) * 24 + tz)]
 
 def moonrise(jd, place):
   """Moonrise when centre of disc is at horizon for given date and place"""
@@ -335,12 +335,18 @@ def ritu(masa_num):
   """0 = Vasanta,...,5 = Shishira"""
   return masa_num // 2
 
+def day_duration(jd, place):
+  srise = sunrise(jd, place)[0]  # julian day num
+  sset = sunset(jd, place)[0]    # julian day num
+  diff = (sset - srise) * 24     # In hours
+  return [diff, to_dms(diff)]
+
 # ----- TESTS ------
 def all_tests():
   print(moonrise(date2, bangalore)) # Expected: 11:28:06
   print(moonset(date2, bangalore))  # Expected: 24:12:48
   print(sunrise(date2, bangalore)[1])  # Expected:  6:47:20
-  print(sunset(date2, bangalore))   # Expected: 18:12:58 
+  print(sunset(date2, bangalore)[1])   # Expected: 18:12:58 
   assert(vaara(date2) == 5)
   print(sunrise(date4, shillong)[1])   # On this day, Nakshatra and Yoga are skipped!
   print(karana(date2, helsinki))   # Expected: 14, Vanija

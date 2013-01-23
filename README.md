@@ -45,6 +45,13 @@ If you want to _modify_ the GUI (`Gui.wxg`), you must use wxGlade:
     apt-get install python-wxglade
 ```
 
+How does it look?
+
+[Sample screenshot](http://s9.postimage.org/yau3s2b5n/screenshot.jpg):
+
+![Sample screenshot](http://s9.postimage.org/yau3s2b5n/screenshot.jpg "Hindu Panchanga")
+
+
 License
 -------
 
@@ -53,7 +60,5 @@ GNU Affero GPL version 3.
 
 #### TODO ####
 
-* Samvatsara
-* Day duration
 * Festivals
 * Rahukala, Yamaganda
