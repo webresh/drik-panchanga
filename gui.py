@@ -30,6 +30,7 @@ from time import strptime
 from pytz import timezone, utc
 from datetime import *
 from panchanga import *
+import difflib
 
 # begin wxGlade: extracode
 # end wxGlade
@@ -82,6 +83,9 @@ class Panchanga(wx.Frame):
         self.Bind(wx.EVT_TEXT_ENTER, self.update_place, self.tzTxt)
         self.Bind(wx.EVT_TEXT, self.update_place, self.tzTxt)
         # end wxGlade
+
+        now = datetime.now()
+        self.dateTxt.SetValue("%d/%d/%d" % (now.day, now.month, now.year))
         self.init_db()
 
     def __set_properties(self):
@@ -241,7 +245,7 @@ class Panchanga(wx.Frame):
         city = self.placeTxt.Value.title()  # Convert to title-case
         if self.cities.has_key(city):
             self.searchBtn.SetForegroundColour(wx.Colour(0x2C, 0x2C, 0x2C))
-            self.searchBtn.SetLabel("Found!")
+            # self.searchBtn.SetLabel("Found!")
 
             date = self.parse_date()
             city = self.cities[city]
@@ -259,8 +263,13 @@ class Panchanga(wx.Frame):
             self.lonTxt.SetValue("%.5f" % lon)
             self.tzTxt.SetValue("%+.2f" % tz_offset)
         else:
-            self.searchBtn.SetForegroundColour(wx.Colour(0xFF, 0x00, 0x00))  # Red = FF0000
-            self.searchBtn.SetLabel("Not found!")
+            # Find nearest match
+            nearest = difflib.get_close_matches(city, self.all_cities, 5)
+            all_matches = ""
+            for m in nearest:
+                all_matches += m + '\n'
+            msg = city + ' not found!\n\n' + 'Did you mean any of these?\n\n' + all_matches
+            wx.MessageBox(msg, 'Error', wx.OK | wx.ICON_ERROR)
 
         event.Skip()
 
@@ -278,6 +287,7 @@ class Panchanga(wx.Frame):
     def init_db(self):
         fp = open("cities.json")
         self.cities = json.load(fp)
+        self.all_cities = self.cities.keys()
         fp.close()
         fp = open("sanskrit_names.json")
         sktnames = json.load(fp)
