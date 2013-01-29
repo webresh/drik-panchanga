@@ -349,7 +349,7 @@ def all_tests():
   print(sunset(date2, bangalore)[1])   # Expected: 18:12:58 
   assert(vaara(date2) == 5)
   print(sunrise(date4, shillong)[1])   # On this day, Nakshatra and Yoga are skipped!
-  print(karana(date2, helsinki))   # Expected: 14, Vanija
+  assert(karana(date2, helsinki) == [14])   # Expected: 14, Vanija
   return
 
 def tithi_tests():
