@@ -69,12 +69,12 @@ There are two schools of Indian calendar makers:
 2. Those who follow the _Dṛk Siddhāntā_ (Empirical Theory).
 
 SS contains semi-analytical equations for specifying the positions of sun and moon.
-However, the constants in these equations have to be updated regularly (_bīja saṃskāra_). 
+However, the constants in these equations have to be updated regularly ( _bīja saṃskāra_ ). 
 But the equations in SS were last updated around 1000 CE, so they no longer match the
 planetary positions as we see today. For example, the date of solar eclipse as predicted
 by the equations of SS are off by many hours from its actual occurence. In spite of this,
 most Hindu maṭhas still publish yearly pañcāṅgas according to the rules of SS, in the name
-of preserving and practising tradition (_paramparā_).
+of preserving and practising tradition ( _paramparā_ ).
 
 The latter one, _Drik_ school, still follow the general concepts from SS,
 but get the planetary positions from measured or observed data (dṛś = to see).
