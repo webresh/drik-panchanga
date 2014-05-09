@@ -264,7 +264,7 @@ def karana(jd, place):
 
 def vaara(jd):
   """Weekday for given Julian day. 0 = Sunday, 1 = Monday,..., 6 = Saturday"""
-  return 1 + int(ceil(jd) % 7)
+  return int(ceil(jd + 1) % 7)
 
 def masa(jd, place):
   """Returns lunar month and if it is adhika or not.
@@ -276,7 +276,8 @@ def masa(jd, place):
   this_solar_month = raasi(last_new_moon)
   next_solar_month = raasi(next_new_moon)
   is_leap_month = (this_solar_month == next_solar_month)
-  maasa = (this_solar_month + 1) % 12
+  maasa = this_solar_month + 1
+  if maasa > 12: maasa = (maasa % 12)
   return [int(maasa), is_leap_month]
 
 # epoch-midnight to given midnight
@@ -308,7 +309,7 @@ def new_moon(jd, tithi_, opt = -1):
   y = unwrap_angles(y)
   y0 = inverse_lagrange(x, y, 360)
   return start + y0
-  
+
 def raasi(jd):
   """Zodiac of given jd. 1 = Mesha, ... 12 = Meena"""
   swe.set_sid_mode(swe.SIDM_LAHIRI)
@@ -333,7 +334,7 @@ def samvatsara(jd):
 
 def ritu(masa_num):
   """0 = Vasanta,...,5 = Shishira"""
-  return masa_num // 2
+  return (masa_num - 1) // 2
 
 def day_duration(jd, place):
   srise = sunrise(jd, place)[0]  # julian day num
