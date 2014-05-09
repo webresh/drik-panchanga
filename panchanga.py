@@ -4,7 +4,7 @@
 #
 # Copyright (C) 2013 Satish BD  <bdsatish@gmail.com>
 # Downloaded from https://github.com/bdsatish/drik-panchanga
-# 
+#
 # This file is part of the "drik-panchanga" Python library
 # for computing Hindu luni-solar calendar based on the Swiss ephemeris
 #
@@ -34,7 +34,7 @@ Date = struct('Date', ['year', 'month', 'day'])
 Place = struct('Location', ['latitude', 'longitude', 'timezone'])
 
 
-# Convert 23d 30' 30" to 23.508333 degrees 
+# Convert 23d 30' 30" to 23.508333 degrees
 from_dms = lambda degs, mins, secs: degs + mins/60 + secs/3600
 
 # the inverse
@@ -127,12 +127,12 @@ def tithi(jd, place):
   tz = place.timezone
   # 1. Find time of sunrise
   rise = sunrise(jd, place)[0] - tz / 24
-  
+
   # 2. Find tithi at this JDN
   moon_phase = lunar_phase(rise)
   today = ceil(moon_phase / 12)
   degrees_left = today * 12 - moon_phase
-   
+
   # 3. Compute longitudinal differences at intervals of 0.25 days from sunrise
   offsets = [0.25, 0.5, 0.75, 1.0]
   lunar_long_diff = [ (lunar_longitude(rise + t) - lunar_longitude(rise)) % 360 for t in offsets ]
@@ -170,7 +170,7 @@ def nakshatra(jd, place):
   # 1. Find time of sunrise
   lat, lon, tz = place
   rise = sunrise(jd, place)[0] - tz / 24.  # Sunrise at UT 00:00
-   
+
   # Swiss Ephemeris always gives Sayana. So subtract ayanamsa to get Nirayana
   offsets = [0.0, 0.25, 0.5, 0.75, 1.0]
   longitudes = [ (lunar_longitude(rise + t) - swe.get_ayanamsa_ut(rise)) % 360 for t in offsets]
@@ -178,7 +178,7 @@ def nakshatra(jd, place):
   # 2. Today's nakshatra is when offset = 0
   # There are 27 Nakshatras spanning 360 degrees
   nak = ceil(longitudes[0] * 27 / 360)
-  
+
   # 3. Find end time by 5-point inverse Lagrange interpolation
   y = unwrap_angles(longitudes)
   x = offsets
@@ -347,7 +347,7 @@ def all_tests():
   print(moonrise(date2, bangalore)) # Expected: 11:28:06
   print(moonset(date2, bangalore))  # Expected: 24:12:48
   print(sunrise(date2, bangalore)[1])  # Expected:  6:47:20
-  print(sunset(date2, bangalore)[1])   # Expected: 18:12:58 
+  print(sunset(date2, bangalore)[1])   # Expected: 18:12:58
   assert(vaara(date2) == 5)
   print(sunrise(date4, shillong)[1])   # On this day, Nakshatra and Yoga are skipped!
   assert(karana(date2, helsinki) == [14])   # Expected: 14, Vanija
@@ -413,4 +413,3 @@ if __name__ == "__main__":
   # yoga_tests()
   masa_tests()
   # new_moon(jd)
-

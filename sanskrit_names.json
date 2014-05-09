@@ -13,35 +13,35 @@
            "12":"Phālguṇa"
          },
 
-"tithis": { "1":  "Śukla pakṣa prathamā",   
-            "2":  "Śukla pakṣa dvitīyā",    
-            "3":  "Śukla pakṣa tṛtīyā",     
-            "4":  "Śukla pakṣa caturthī",   
-            "5":  "Śukla pakṣa pañcamī",    
-            "6":  "Śukla pakṣa ṣaṣṭhī",     
-            "7":  "Śukla pakṣa saptamī",    
-            "8":  "Śukla pakṣa aṣṭhamī",    
-            "9":  "Śukla pakṣa navamī",     
-            "10": "Śukla pakṣa daśamī",    
-            "11": "Śukla pakṣa ekādaśī",   
-            "12": "Śukla pakṣa dvādaśī",   
-            "13": "Śukla pakṣa trayodaśī", 
-            "14": "Śukla pakṣa caturdasī", 
+"tithis": { "1":  "Śukla pakṣa prathamā",
+            "2":  "Śukla pakṣa dvitīyā",
+            "3":  "Śukla pakṣa tṛtīyā",
+            "4":  "Śukla pakṣa caturthī",
+            "5":  "Śukla pakṣa pañcamī",
+            "6":  "Śukla pakṣa ṣaṣṭhī",
+            "7":  "Śukla pakṣa saptamī",
+            "8":  "Śukla pakṣa aṣṭhamī",
+            "9":  "Śukla pakṣa navamī",
+            "10": "Śukla pakṣa daśamī",
+            "11": "Śukla pakṣa ekādaśī",
+            "12": "Śukla pakṣa dvādaśī",
+            "13": "Śukla pakṣa trayodaśī",
+            "14": "Śukla pakṣa caturdasī",
             "15": "Pūrṇimā",
-            "16": "Kṛṣṇa pakṣa prathamā",   
-            "17": "Kṛṣṇa pakṣa dvitīyā",    
-            "18": "Kṛṣṇa pakṣa tṛtīyā",     
-            "19": "Kṛṣṇa pakṣa caturthī",   
-            "20": "Kṛṣṇa pakṣa pañcamī",    
-            "21": "Kṛṣṇa pakṣa ṣaṣṭhi",     
-            "22": "Kṛṣṇa pakṣa saptamī",    
-            "23": "Kṛṣṇa pakṣa aṣṭhamī",    
-            "24": "Kṛṣṇa pakṣa navamī",     
-            "25": "Kṛṣṇa pakṣa daśamī",    
-            "26": "Kṛṣṇa pakṣa ekādaśī",   
-            "27": "Kṛṣṇa pakṣa dvādaśī",   
-            "28": "Kṛṣṇa pakṣa trayodaśī", 
-            "29": "Kṛṣṇa pakṣa caturdasī", 
+            "16": "Kṛṣṇa pakṣa prathamā",
+            "17": "Kṛṣṇa pakṣa dvitīyā",
+            "18": "Kṛṣṇa pakṣa tṛtīyā",
+            "19": "Kṛṣṇa pakṣa caturthī",
+            "20": "Kṛṣṇa pakṣa pañcamī",
+            "21": "Kṛṣṇa pakṣa ṣaṣṭhi",
+            "22": "Kṛṣṇa pakṣa saptamī",
+            "23": "Kṛṣṇa pakṣa aṣṭhamī",
+            "24": "Kṛṣṇa pakṣa navamī",
+            "25": "Kṛṣṇa pakṣa daśamī",
+            "26": "Kṛṣṇa pakṣa ekādaśī",
+            "27": "Kṛṣṇa pakṣa dvādaśī",
+            "28": "Kṛṣṇa pakṣa trayodaśī",
+            "29": "Kṛṣṇa pakṣa caturdasī",
             "30": "Amāvāsyā"
            },
 
@@ -167,7 +167,7 @@
              "60":"Nāgava"
            },
 
-"varas": { 
+"varas": {
            "0": "Bhānuvāra",
            "1": "Somavāra",
            "2": "Maṅgalavāra",
@@ -240,7 +240,7 @@
               "60":"Akṣaya"
             },
 
-"ritus":   { 
+"ritus":   {
             "0": "Vasanta",
             "1": "Grīṣma",
             "2": "Varṣā",
@@ -249,6 +249,3 @@
             "5": "Śiśira"
            }
 }
-
-
-
