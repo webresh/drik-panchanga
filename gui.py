@@ -6,7 +6,7 @@
 #
 # Copyright (C) 2013 Satish BD  <bdsatish@gmail.com>
 # Downloaded from https://github.com/bdsatish/drik-panchanga
-# 
+#
 # This file is part of the "drik-panchanga" Python library
 # for computing Hindu luni-solar calendar based on the Swiss ephemeris
 #
@@ -28,7 +28,7 @@ import json
 
 from time import strptime
 from pytz import timezone, utc
-from datetime import *
+from datetime import datetime
 from panchanga import *
 import difflib
 
@@ -253,10 +253,10 @@ class Panchanga(wx.Frame):
             lat = city['latitude']
             lon = city['longitude']
             tzname = city['timezone']
-            # checking at 5 AM local (DST changes generally happen before 3 AM local time)
-            local_time = timezone(tzname).localize(datetime(date.year, date.month, date.day, 5, 0, 0))
+            tzone = timezone(tzname)
+            dt = datetime(date.year, date.month, date.day)
             # offset from UTC (in hours). Needed especially for DST countries
-            tz_offset = datetime.utcoffset(local_time).total_seconds() / 3600.
+            tz_offset = tzone.utcoffset(dt, is_dst = True).total_seconds() / 3600.
             self.place = Place(lat, lon, tz_offset)
 
             # update coordinate textboxes
