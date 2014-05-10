@@ -191,6 +191,7 @@ class Panchanga(wx.Frame):
     def calculate_panchanga(self, event):  # wxGlade: Panchanga.<event_handler>
         jd = gregorian_to_jd(self.parse_date())
         self.update_place(event)
+        self.search_location(event)
         place = self.place
 
         ti = tithi(jd, place)
