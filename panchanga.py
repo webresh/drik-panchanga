@@ -73,6 +73,7 @@ def inverse_lagrange(x, y, ya):
 
 # Julian Day number as on (year, month, day) at 00:00 UTC
 gregorian_to_jd = lambda date: swe.julday(date.year, date.month, date.day, 0.0)
+jd_to_gregorian = lambda jd: swe.revjul(jd, swe.GREG_CAL)   # returns (y, m, d, h, min, s)
 
 def solar_longitude(jd):
   """Solar longitude at given instant (julian day) jd"""
@@ -284,12 +285,10 @@ def masa(jd, place):
 # Days elapsed since beginning of Kali Yuga
 ahargana = lambda jd: jd - 588465.5
 
-def elapsed_year(jd):
-  swe.set_sid_mode(swe.SIDM_LAHIRI)
-  ahar = ahargana(jd)
-  mean_sidereal_year = 365.25636
-  solar_long = (solar_longitude(jd) - swe.get_ayanamsa_ut(jd)) % 360
-  kali = round(ahar / mean_sidereal_year -  solar_long / 360)
+def elapsed_year(jd, maasa_num):
+  sidereal_year = 365.25636
+  ahar = ahargana(jd)  # or (jd + sunrise(jd, place)[0])
+  kali = int((ahar + (4 - maasa_num) * 30) / sidereal_year)
   saka = kali - 3179
   vikrama = saka + 135
   return kali, saka
@@ -324,12 +323,11 @@ def lunar_phase(jd):
   moon_phase = (lunar_long - solar_long) % 360
   return moon_phase
 
-def samvatsara(jd):
-  ahar = ahargana(jd)
-  jupiter_period = 1577917500 / 364224  # number of days for revolution around sun
-  # Change 13 to 27 (14 yrs offset) for North Indian tradition
+def samvatsara(jd, maasa_num):
+  kali = elapsed_year(jd, maasa_num)[0]
+  # Change 13 to 0 for North Indian tradition
   # See the function "get_Jovian_Year_name_south" in pancanga.pl
-  samvat = (int(ahar / (jupiter_period / 12)) + 13) % 60
+  samvat = ((kali + 27 + int((kali * 211 - 108) / 18000)) - 13) % 60
   return samvat
 
 def ritu(masa_num):

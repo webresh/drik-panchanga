@@ -204,8 +204,8 @@ class Panchanga(wx.Frame):
         srise = sunrise(jd, place)[1]
         sset = sunset(jd, place)[1]
         kday = ahargana(jd)
-        kyear, sakayr = elapsed_year(jd)
-        samvat = samvatsara(jd)
+        kyear, sakayr = elapsed_year(jd, mas[0])
+        samvat = samvatsara(jd, mas[0])
         day_dur = day_duration(jd, place)[1]
 
         # Update GUI one by one. First the easy ones
