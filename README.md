@@ -59,6 +59,23 @@ How does it look?
 ![Sample screenshot](https://raw.githubusercontent.com/bdsatish/drik-panchanga/master/screenshot.jpg "Hindu Panchanga")
 
 
+Accuracy
+--------
+
+The program is as accurate as the Swiss Ephemeris installed on your system. So generally it is
+accurate for years 5000 BCE to 5000 CE, especially in the range 2500 BCE - 2500 CE. The
+computational speed stays the same no matter which date you enter. Compared to other software listed
+in the [References](#references), our software is way better in this sense.
+
+As a simple test, try to compute the date of Madhva Navami, which is celebrated as the disappearance
+day of the Indian philosopher [Madhvācārya](http://en.wikipedia.org/wiki/Madhvacharya). The exact
+date is 1317 CE, Māgha-māsa śukla-pakṣa navamī. All other software listed in
+[References](#references) give error "Year out-of-range".  But in our software, enter the place
+"Udipi" and date "30/1/1317" and you indeed get Māgha śuddha navamī. You can cross-verify it on the
+[Calendrica website](http://emr.cs.iit.edu/home/reingold/calendar-book/Calendrica.html).
+
+
+
 About the calendar
 ------------------
 
@@ -95,19 +112,26 @@ These ones are helpful for implementing panchanga software:
 
 This is _the_ calendar book (though it mostly deals with Surya Siddhanta):
 * Dershowitz and Reingold, _Calendrical Calculations_, 3rd edition, 2008.
+  [Online Java applet](http://emr.cs.iit.edu/home/reingold/calendar-book/Calendrica.html).
 
 #### Similar software ####
 
 Prof. M. Yanom's [online interface](http://www.cc.kyoto-su.ac.jp/~yanom/pancanga/)
 to his [Perl code](http://www.cc.kyoto-su.ac.jp/~yanom/sanskrit/pancanga/pancanga3.13) -- this
-is the best version of the old Surya Siddhanta pancanga I've seen.
+is the best version of the old Surya Siddhanta pancanga I've seen. However, the Surya Siddhanta
+system (no fault with the Perl code) is not accurate if you want to work with dates which are
+several centuries before our current time.
 
-[drikpanchang](http://drikpanchang.com) is a reliable online calendar for the Drik.
-However, it is neither open source nor do they have a desktop program.
+[drikpanchang](http://drikpanchang.com) is a reliable online calendar for the Drik.  However, it is
+neither open source nor do they have a desktop program. This website doesn't work for dates before
+1600 CE. Their [Android app](https://play.google.com/store/apps/details?id=com.drikp.core) doesn't
+work for dates outside the range 1900 - 2100 CE.
+
 
 [Hindu Calendar](https://play.google.com/store/apps/details?id=com.alokmandavgane.hinducalendar)
 for Android is another offline Drik calendar by Alok Mandavgane. Again, this is
-not open source.
+not open source. This software has a bug that it doesn't account for daylight savings
+in Europe. Also it doesn't work for dates outside the range 1900 - 2100 CE.
 
 Among open source programs, I found these two:
 
