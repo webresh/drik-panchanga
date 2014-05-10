@@ -1,7 +1,7 @@
 Drik Panchanga
 ==============
 
-Observational Indian lunisolar calendar using the Swiss ephemeris (Hindu 
+Observational Indian lunisolar calendar using the Swiss ephemeris (Hindu
 Drig-ganita Panchanga).
 
 Features
@@ -16,17 +16,17 @@ Computation of the five essentials of the panchangam:
 
 Not just the values, but also the end times of tithis and nakshatras
 are computed. The only factor limiting the accuracy of the program
-output is the uncertainity in your input values (latitude, longitude). 
+output is the uncertainity in your input values (latitude, longitude).
 
 Also includes computation of sunrise, sunset, moonrise and moonset.
 
 By default, the month type is Amavasyanta (new moon to new moon) which
-is most prominent type of calendar used in South India. 
+is most prominent type of calendar used in South India.
 
 NOTE:
 All timings are end timings. Timings displayed higher than 24:00 denote
-hours past midnight because the Hindu day (tithi) starts and ends with 
-sunrise. If applicable, daylight savings (DST) are accounted for 
+hours past midnight because the Hindu day (tithi) starts and ends with
+sunrise. If applicable, daylight savings (DST) are accounted for
 automatically based on the date and place entered in the textboxes.
 
 
@@ -54,22 +54,22 @@ If you want to _modify_ the GUI (`Gui.wxg`), you must use wxGlade:
 
 How does it look?
 
-[Sample screenshot](http://s9.postimage.org/sag602wvz/screenshot.jpg):
+[Sample screenshot](https://raw.githubusercontent.com/bdsatish/drik-panchanga/master/screenshot.jpg):
 
-![Sample screenshot](http://s9.postimage.org/sag602wvz/screenshot.jpg "Hindu Panchanga")
+![Sample screenshot](https://raw.githubusercontent.com/bdsatish/drik-panchanga/master/screenshot.jpg "Hindu Panchanga")
 
 
 About the calendar
 ------------------
 
-There are two schools of Indian calendar makers: 
+There are two schools of Indian calendar makers:
 
 1. Those who follow the rules of the [_Sūrya Siddhāntā_](http://en.wikipedia.org/wiki/Surya_Siddhanta)
    (SS, Theory of the Sun) or its variants like _Ārya Siddhānta_ of Aryabhata.
 2. Those who follow the _Dṛk Siddhāntā_ (Empirical Theory).
 
 SS contains semi-analytical equations for specifying the positions of sun and moon.
-However, the constants in these equations have to be updated regularly ( _bīja saṃskāra_ ). 
+However, the constants in these equations have to be updated regularly ( _bīja saṃskāra_ ).
 But the equations in SS were last updated around 1000 CE, so they no longer match the
 planetary positions as we see today. For example, the date of solar eclipse as predicted
 by the equations of SS are off by many hours from its actual occurence. In spite of this,
@@ -78,7 +78,7 @@ of preserving and practising tradition ( _paramparā_ ).
 
 The latter one, _Drik_ school, still follow the general concepts from SS,
 but get the planetary positions from measured or observed data (dṛś = to see).
-Hence, their results match accurately with observed celestial phenomena. 
+Hence, their results match accurately with observed celestial phenomena.
 The [Swiss Ephemeris](http://www.astro.com/swisseph/swephinfo_e.htm) is probably
 the best source available today for planetary calculations. It provides highly
 accurate databases of planetary data for about 10000 years. Hence, this panchanga
@@ -112,7 +112,7 @@ not open source.
 Among open source programs, I found these two:
 
 * [On Google Code](http://panchangam.googlecode.com/svn/calc-v2): generates a pdf of
-panchanga for any year and place, but imprecise. For ex., tithi end timings are off 
+panchanga for any year and place, but imprecise. For ex., tithi end timings are off
 by ten minutes sometimes. There is no GUI either.
 
 * [On GitHub](https://github.com/santhoshn/panchanga): Based on Paul Schlyter's
