@@ -74,9 +74,7 @@ class Panchanga(wx.Frame):
 
         self.Bind(wx.EVT_TEXT_ENTER, self.search_location, self.placeTxt)
         self.Bind(wx.EVT_BUTTON, self.search_location, self.searchBtn)
-        self.Bind(wx.EVT_TEXT, self.update_timezone, self.dateTxt)
-        self.Bind(wx.EVT_TEXT_ENTER, self.update_timezone, self.dateTxt)
-        # self.Bind(wx.EVT_TEXT_ENTER, self.calculate_panchanga, self.dateTxt)
+        self.Bind(wx.EVT_TEXT_ENTER, self.calculate_panchanga, self.dateTxt)
         self.Bind(wx.EVT_BUTTON, self.calculate_panchanga, self.computeBtn)
         self.Bind(wx.EVT_TEXT_ENTER, self.set_place, self.latTxt)
         self.Bind(wx.EVT_TEXT, self.set_place, self.latTxt)
@@ -87,14 +85,13 @@ class Panchanga(wx.Frame):
         # end wxGlade
 
         now = datetime.now()
-        self.tzone = None
         self.dateTxt.SetValue("%d/%d/%d" % (now.day, now.month, now.year))
         self.init_db()
 
     def __set_properties(self):
         # begin wxGlade: Panchanga.__set_properties
         self.SetTitle("Indian Calendar")
-        self.SetSize((625, 488))
+        self.SetSize((625, 575))
         self.SetToolTipString("Can also be entered as: 77d 35' 37\"")
         self.placeTxt.SetToolTipString("If the search fails, enter Latitude, Longitude and Time zone directly below and click \"Compute\". Enter ASCII names only.")
         self.searchBtn.SetForegroundColour(wx.Colour(44, 44, 44))
@@ -258,7 +255,7 @@ class Panchanga(wx.Frame):
             tzname = city['timezone']
             self.tzone = timezone(tzname)
             print("search_location", self.tzone)
-            tz_offset = self.update_timezone(event)
+            tz_offset = self.compute_timezone_offset()
             self.place = Place(lat, lon, tz_offset)
 
             # update coordinate textboxes
@@ -310,7 +307,6 @@ class Panchanga(wx.Frame):
         lon = float(self.lonTxt.Value)
         tz = float(self.tzTxt.Value)
         self.place = Place(lat, lon, tz)
-        self.tzone = None
         event.Skip()
 
 
@@ -321,17 +317,6 @@ class Panchanga(wx.Frame):
         # offset from UTC (in hours). Needed especially for DST countries
         tz_offset = timezone.utcoffset(dt, is_dst = True).total_seconds() / 3600.
         return tz_offset
-
-
-    def update_timezone(self, event):  # wxGlade: Panchanga.<event_handler>
-        print("ENTER")
-        print("update_timzone", self.tzone)
-        if self.tzone is not None:
-            tz_offset = self.compute_timezone_offset()
-            print(tz_offset)
-            self.tzTxt.SetValue("%+.2f" % tz_offset)
-
-        event.Skip()
 
 # end of class Panchanga
 
