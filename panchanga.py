@@ -325,9 +325,10 @@ def lunar_phase(jd):
 
 def samvatsara(jd, maasa_num):
   kali = elapsed_year(jd, maasa_num)[0]
-  # Change 13 to 0 for North Indian tradition
+  # Change 14 to 0 for North Indian tradition
   # See the function "get_Jovian_Year_name_south" in pancanga.pl
-  samvat = ((kali + 27 + int((kali * 211 - 108) / 18000)) - 13) % 60
+  if kali >= 4009:    kali = (kali - 14) % 60
+  samvat = (kali + 27 + int((kali * 211 - 108) / 18000)) % 60
   return samvat
 
 def ritu(masa_num):

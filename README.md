@@ -63,7 +63,8 @@ Using the GUI
 
 ### Location known
 
-First, type the Date in DD/MM/YYYY format in the 'Date' field.
+First, type the Date in DD/MM/YYYY format in the 'Date' field. Negative value for YYYY are
+interpolated as proleptic Gregorian calendar.
 
 Second, type your location (city or district) in the Location field and click 'Search'.  If found,
 then the coordinates and time zone are updated. If not, try the [next method](#location-unknown).
@@ -97,6 +98,9 @@ date is 1317 CE, Māgha-māsa śukla-pakṣa navamī. All other software listed 
 "Udipi" and date "30/1/1317" and you indeed get Māgha śuddha navamī. You can cross-verify it on the
 [Calendrica website](http://emr.cs.iit.edu/home/reingold/calendar-book/Calendrica.html).
 
+Note that dates before 1582 must be entered in
+[proleptic Gregorian](https://en.wikipedia.org/wiki/Proleptic_Gregorian_calendar), which is a
+natural back-interpolation of the current Gregorian calendar we use everyday.
 
 
 About the calendar
