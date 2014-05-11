@@ -58,6 +58,30 @@ How does it look?
 
 ![Sample screenshot](https://raw.githubusercontent.com/bdsatish/drik-panchanga/master/screenshot.jpg "Hindu Panchanga")
 
+Using the GUI
+-------------
+
+### Location known
+
+First, type your location (city or district) in the Location field and click 'Search'.  If found,
+then the coordinates and time zone are updated. If not, try the [next method](#location-unknown).
+If your location's population is more than 50,000 then the location should be found.
+
+Second, type the Date in DD/MM/YYYY format in the 'Date' field. Hit **Enter** on your keyboard.
+(If you forget to hit **Enter**, then time zone may not be updated).
+
+Third, click 'Compute'. Now the fields like tithi, etc. are computed and shown on the GUI.
+
+### Location unknown
+
+First, type the Date in DD/MM/YYYY format in the 'Date' field.
+
+Second, manually enter the coordinates and time zone of your location. You can use
+[Google Maps](http://maps.google.com) or [Time and Date website](http://www.timeanddate.com/) for
+this purpose.
+
+Third, click 'Compute'.  Now the fields like tithi, etc. are computed and shown on the GUI.
+
 
 Accuracy
 --------

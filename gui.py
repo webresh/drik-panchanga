@@ -74,17 +74,20 @@ class Panchanga(wx.Frame):
 
         self.Bind(wx.EVT_TEXT_ENTER, self.search_location, self.placeTxt)
         self.Bind(wx.EVT_BUTTON, self.search_location, self.searchBtn)
-        self.Bind(wx.EVT_TEXT_ENTER, self.calculate_panchanga, self.dateTxt)
+        self.Bind(wx.EVT_TEXT, self.update_timezone, self.dateTxt)
+        self.Bind(wx.EVT_TEXT_ENTER, self.update_timezone, self.dateTxt)
+        # self.Bind(wx.EVT_TEXT_ENTER, self.calculate_panchanga, self.dateTxt)
         self.Bind(wx.EVT_BUTTON, self.calculate_panchanga, self.computeBtn)
-        self.Bind(wx.EVT_TEXT_ENTER, self.update_place, self.latTxt)
-        self.Bind(wx.EVT_TEXT, self.update_place, self.latTxt)
-        self.Bind(wx.EVT_TEXT_ENTER, self.update_place, self.lonTxt)
-        self.Bind(wx.EVT_TEXT, self.update_place, self.lonTxt)
-        self.Bind(wx.EVT_TEXT_ENTER, self.update_place, self.tzTxt)
-        self.Bind(wx.EVT_TEXT, self.update_place, self.tzTxt)
+        self.Bind(wx.EVT_TEXT_ENTER, self.set_place, self.latTxt)
+        self.Bind(wx.EVT_TEXT, self.set_place, self.latTxt)
+        self.Bind(wx.EVT_TEXT_ENTER, self.set_place, self.lonTxt)
+        self.Bind(wx.EVT_TEXT, self.set_place, self.lonTxt)
+        self.Bind(wx.EVT_TEXT_ENTER, self.set_place, self.tzTxt)
+        self.Bind(wx.EVT_TEXT, self.set_place, self.tzTxt)
         # end wxGlade
 
         now = datetime.now()
+        self.tzone = None
         self.dateTxt.SetValue("%d/%d/%d" % (now.day, now.month, now.year))
         self.init_db()
 
@@ -95,7 +98,7 @@ class Panchanga(wx.Frame):
         self.SetToolTipString("Can also be entered as: 77d 35' 37\"")
         self.placeTxt.SetToolTipString("If the search fails, enter Latitude, Longitude and Time zone directly below and click \"Compute\". Enter ASCII names only.")
         self.searchBtn.SetForegroundColour(wx.Colour(44, 44, 44))
-        self.dateTxt.SetToolTipString("Enter date and click \"Compute\". Negative years are treated as per proleptic Gregorian calendar.")
+        self.dateTxt.SetToolTipString("Type the date, hit ENTER and click \"Compute\". Negative years are treated as per proleptic Gregorian calendar.")
         self.dateTxt.SetFocus()
         self.latTxt.SetToolTipString("Can also be entered as: 12d 58' 19\"")
         self.tzTxt.SetToolTipString("In hours. Positive values are east of UTC and negative, west of UTC.")
@@ -114,7 +117,7 @@ class Panchanga(wx.Frame):
         grid_sizer_1.Add(label_2, 0, wx.ALIGN_CENTER_VERTICAL, 0)
         label_4 = wx.StaticText(self, -1, "")
         grid_sizer_1.Add(label_4, 0, 0, 0)
-        label_6 = wx.StaticText(self, -1, "Place")
+        label_6 = wx.StaticText(self, -1, "Location")
         grid_sizer_1.Add(label_6, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 0)
         grid_sizer_1.Add(self.placeTxt, 0, wx.EXPAND | wx.ALIGN_CENTER_VERTICAL, 0)
         grid_sizer_1.Add(self.searchBtn, 0, 0, 0)
@@ -190,8 +193,7 @@ class Panchanga(wx.Frame):
 
     def calculate_panchanga(self, event):  # wxGlade: Panchanga.<event_handler>
         jd = gregorian_to_jd(self.parse_date())
-        self.update_place(event)
-        self.search_location(event)
+        self.set_place(event)
         place = self.place
 
         ti = tithi(jd, place)
@@ -242,6 +244,7 @@ class Panchanga(wx.Frame):
 
         event.Skip()
 
+
     def search_location(self, event):  # wxGlade: Panchanga.<event_handler>
         city = self.placeTxt.Value.title()  # Convert to title-case
         if self.cities.has_key(city):
@@ -253,10 +256,9 @@ class Panchanga(wx.Frame):
             lat = city['latitude']
             lon = city['longitude']
             tzname = city['timezone']
-            tzone = timezone(tzname)
-            dt = datetime(date.year, date.month, date.day)
-            # offset from UTC (in hours). Needed especially for DST countries
-            tz_offset = tzone.utcoffset(dt, is_dst = True).total_seconds() / 3600.
+            self.tzone = timezone(tzname)
+            print("search_location", self.tzone)
+            tz_offset = self.update_timezone(event)
             self.place = Place(lat, lon, tz_offset)
 
             # update coordinate textboxes
@@ -303,11 +305,32 @@ class Panchanga(wx.Frame):
         self.ritus = sktnames["ritus"]
 
 
-    def update_place(self, event):  # wxGlade: Panchanga.<event_handler>
+    def set_place(self, event):  # wxGlade: Panchanga.<event_handler>
         lat = float(self.latTxt.Value)
         lon = float(self.lonTxt.Value)
         tz = float(self.tzTxt.Value)
         self.place = Place(lat, lon, tz)
+        self.tzone = None
+        event.Skip()
+
+
+    def compute_timezone_offset(self):
+        date = self.parse_date()
+        timezone = self.tzone
+        dt = datetime(date.year, date.month, date.day)
+        # offset from UTC (in hours). Needed especially for DST countries
+        tz_offset = timezone.utcoffset(dt, is_dst = True).total_seconds() / 3600.
+        return tz_offset
+
+
+    def update_timezone(self, event):  # wxGlade: Panchanga.<event_handler>
+        print("ENTER")
+        print("update_timzone", self.tzone)
+        if self.tzone is not None:
+            tz_offset = self.compute_timezone_offset()
+            print(tz_offset)
+            self.tzTxt.SetValue("%+.2f" % tz_offset)
+
         event.Skip()
 
 # end of class Panchanga
