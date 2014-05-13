@@ -135,7 +135,8 @@ References
 
 These ones are helpful for implementing panchanga software:
 * Karanam Ramakumar, [_Panchangam Calculations_](http://archive.org/details/PanchangamCalculations)
-* _Second Level of the Astronomical Calculations in GCAL_, used in ISKCON's GCal software.
+* [_Second Level of the Astronomical Calculations in GCAL_](http://www.krishnadays.com/eng/index.php?option=com_docman&task=doc_download&gid=7&Itemid=58),
+ used in ISKCON's GCal software.
 
 This is _the_ calendar book (though it mostly deals with Surya Siddhanta):
 * Dershowitz and Reingold, _Calendrical Calculations_, 3rd edition, 2008.
