@@ -54,9 +54,9 @@ If you want to _modify_ the GUI (`Gui.wxg`), you must use wxGlade:
 
 How does it look?
 
-[Sample screenshot](https://raw.githubusercontent.com/bdsatish/drik-panchanga/master/screenshot.jpg):
+[Sample screenshot](https://raw.githubusercontent.com/webresh/drik-panchanga/master/screenshot.jpg):
 
-![Sample screenshot](https://raw.githubusercontent.com/bdsatish/drik-panchanga/master/screenshot.jpg "Hindu Panchanga")
+![Sample screenshot](https://raw.githubusercontent.com/webresh/drik-panchanga/master/screenshot.jpg "Hindu Panchanga")
 
 Using the GUI
 -------------
