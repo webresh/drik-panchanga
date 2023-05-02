@@ -250,18 +250,51 @@ def yoga(jd, place):
 
 
 def karana(jd, place):
-  """Returns the karana and their ending times. (from 1 to 60)"""
-  # 1. Find time of sunrise
-  rise = sunrise(jd, place)[0]
+    """Returns the karana and their ending times. (from 1 to 60)"""
+    tz = place.timezone
+    # 1. Find time of sunrise
+    rise = sunrise(jd, place)[0] - tz / 24
 
-  # 2. Find karana at this JDN
-  solar_long = solar_longitude(rise)
-  lunar_long = lunar_longitude(rise)
-  moon_phase = (lunar_long - solar_long) % 360
-  today = ceil(moon_phase / 6)
-  degrees_left = today * 6 - moon_phase
+    # 2. Find tithi at this JDN
+    moon_phase = lunar_phase(rise)
+    today = ceil(moon_phase / 6)
 
-  return [int(today)]
+    print("karana Value : ")
+    print(today)
+
+    degrees_left = today * 6 - moon_phase
+
+    # 3. Compute longitudinal differences at intervals of 0.25 days from sunrise
+    offsets = [0.25, 0.5, 0.75, 1.0]
+    lunar_long_diff = [(lunar_longitude(rise + t) -
+                        lunar_longitude(rise)) % 360 for t in offsets]
+    solar_long_diff = [(solar_longitude(rise + t) -
+                        solar_longitude(rise)) % 360 for t in offsets]
+    relative_motion = [
+        moon - sun for (moon, sun) in zip(lunar_long_diff, solar_long_diff)]
+
+    # 4. Find end time by 4-point inverse Lagrange interpolation
+    y = relative_motion
+    x = offsets
+    # compute fraction of day (after sunrise) needed to traverse 'degrees_left'
+    approx_end = inverse_lagrange(x, y, degrees_left)
+    ends = (rise + approx_end - jd) * 24 + tz
+    answer = [int(today), to_dms(ends)]
+
+    # 5. Check for skipped tithi
+    moon_phase_tmrw = lunar_phase(rise + 1)
+    tomorrow = ceil(moon_phase_tmrw / 6)
+    isSkipped = (tomorrow - today) % 30 > 1
+    if isSkipped:
+        # interpolate again with same (x,y)
+        leap_tithi = today + 1
+        degrees_left = leap_tithi * 6 - moon_phase
+        approx_end = inverse_lagrange(x, y, degrees_left)
+        ends = (rise + approx_end - jd) * 24 + place.timezone
+        leap_tithi = 1 if today == 30 else leap_tithi
+        answer += [int(leap_tithi), to_dms(ends)]
+
+    return answer
 
 def vaara(jd):
   """Weekday for given Julian day. 0 = Sunday, 1 = Monday,..., 6 = Saturday"""
